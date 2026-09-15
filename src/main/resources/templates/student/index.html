@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学生主页 - 餐费管理系统</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #165DFF;
+            --primary-dark: #0E42D2;
+            --primary-light: #E8F3FF;
+            --success: #00B42A;
+            --warning: #FF7D00;
+            --danger: #F53F3F;
+            --info: #86909C;
+            --bg-page: #F5F7FA;
+            --bg-card: #FFFFFF;
+            --border: #E5E6EB;
+            --text-primary: #1D2129;
+            --text-secondary: #4E5969;
+        }
+        
+        body {
+            background-color: var(--bg-page);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            min-height: 100vh;
+        }
+        
+        .top-nav {
+            background: var(--primary);
+            color: white;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(22, 93, 255, 0.2);
+        }
+        
+        .top-nav-title {
+            font-size: 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .top-nav-user {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+        
+        .sidebar {
+            width: 220px;
+            background: var(--bg-card);
+            min-height: calc(100vh - 66px);
+            padding: 20px 0;
+            border-right: 1px solid var(--border);
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .sidebar-item {
+            margin-bottom: 4px;
+        }
+        
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+        
+        .sidebar-link:hover {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+        
+        .sidebar-link.active {
+            background: var(--primary-light);
+            color: var(--primary);
+            border-left-color: var(--primary);
+        }
+        
+        .sidebar-link svg {
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+        }
+        
+        .content-area {
+            flex: 1;
+            padding: 24px;
+        }
+        
+        .dashboard-card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+            margin-bottom: 24px;
+        }
+        
+        .balance-section {
+            background: linear-gradient(135deg, var(--primary) 0%, #4080FF 100%);
+            border-radius: 12px;
+            padding: 32px;
+            color: white;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 20px rgba(22, 93, 255, 0.25);
+        }
+        
+        .balance-label {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 8px;
+        }
+        
+        .balance-amount {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+        
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .status-normal {
+            background: rgba(0, 180, 42, 0.15);
+            color: var(--success);
+        }
+        
+        .status-lost {
+            background: rgba(245, 63, 63, 0.15);
+            color: var(--danger);
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        
+        .info-item {
+            background: var(--bg-card);
+            border-radius: 10px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+        
+        .info-icon {
+            width: 44px;
+            height: 44px;
+            background: var(--primary-light);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+        }
+        
+        .info-icon svg {
+            width: 20px;
+            height: 20px;
+        }
+        
+        .info-content {
+            flex: 1;
+        }
+        
+        .info-title {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+        
+        .info-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .feature-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .feature-card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            text-decoration: none;
+            display: block;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary);
+        }
+        
+        .feature-icon {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, var(--primary) 0%, #4080FF 100%);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            box-shadow: 0 4px 12px rgba(22, 93, 255, 0.3);
+        }
+        
+        .feature-icon svg {
+            width: 24px;
+            height: 24px;
+            fill: white;
+        }
+        
+        .feature-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+        
+        .feature-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        
+        .btn-danger-custom {
+            background: var(--danger);
+            border: none;
+            border-radius: 8px;
+            padding: 10px 24px;
+            color: white;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-danger-custom:hover {
+            background: #D93636;
+            transform: translateY(-2px);
+        }
+        
+        .btn-success-custom {
+            background: var(--success);
+            border: none;
+            border-radius: 8px;
+            padding: 10px 24px;
+            color: white;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-success-custom:hover {
+            background: #009A29;
+            transform: translateY(-2px);
+        }
+        
+        .success-message {
+            background: rgba(0, 180, 42, 0.1);
+            border: 1px solid rgba(0, 180, 42, 0.2);
+            border-radius: 8px;
+            padding: 12px 16px;
+            color: var(--success);
+            font-size: 14px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .logout-btn {
+            color: white;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .logout-btn:hover {
+            opacity: 1;
+        }
+        
+        .logout-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation -->
+    <div class="top-nav">
+        <div class="top-nav-title">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm7-3a4 4 0 1 1-8 0 4 4 0 0 1 8 0zm-.464 4.95l.707.707a1 1 0 0 0 1.414-1.414l-.707-.707a1 1 0 0 0-1.414 1.414zm2.12-6.169a1 1 0 1 0 0 2 1 1 0 0 0 0-2zM11 9a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm-9 1a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/>
+            </svg>
+            <span>餐费管理系统</span>
+        </div>
+        <div class="top-nav-user">
+            <span>欢迎，[[${student.studentName}]]</span>
+            <div class="user-avatar">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M2 1a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V1zm2 0v14h10V1H4zm2 3h2v1H6V4zm0 3h2v1H6V7zm0 3h2v1H6v-1z"/>
+                </svg>
+            </div>
+            <a href="/student/logout" class="logout-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z"/>
+                    <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
+                </svg>
+                退出
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="d-flex">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <ul class="sidebar-menu">
+                <li class="sidebar-item">
+                    <a th:href="@{/student/index(studentId=${student.studentId})}" class="sidebar-link active">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+                        </svg>
+                        <span>首页</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a th:href="@{/student/profile(studentId=${student.studentId})}" class="sidebar-link">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                        </svg>
+                        <span>个人中心</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a th:href="@{/student/recharge/apply(studentId=${student.studentId})}" class="sidebar-link">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M11 17h2v-4h4v-2h-4V7h-2v4H7v2h4v4z"/>
+                        </svg>
+                        <span>余额充值</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a th:href="@{/student/recharge/records(studentId=${student.studentId})}" class="sidebar-link">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+                        </svg>
+                        <span>充值记录</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a th:href="@{/student/consumption/records(studentId=${student.studentId})}" class="sidebar-link">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+                        </svg>
+                        <span>消费记录</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a th:href="@{/student/password/change(studentId=${student.studentId})}" class="sidebar-link">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM11 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2h-6V6zm-1 12v-2h2v2H10zm4 0v-2h2v2h-2zm-8 0v-2h2v2H6z"/>
+                        </svg>
+                        <span>修改密码</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Content Area -->
+        <div class="content-area">
+            <!-- Success Message -->
+            <div th:if="${success}" class="success-message">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z"/>
+                </svg>
+                <span th:text="${success}"></span>
+            </div>
+
+            <!-- Balance Card -->
+            <div class="balance-section">
+                <div class="balance-label">当前餐费余额</div>
+                <div class="balance-amount">¥ [[${student.balance}]]</div>
+                <div class="status-badge" th:class="${student.isLost == 1 ? 'status-lost' : 'status-normal'}">
+                    <svg th:if="${student.isLost == 1}" xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                    </svg>
+                    <svg th:else xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z"/>
+                    </svg>
+                    <span th:text="${student.isLost == 1 ? '饭卡已挂失' : '状态正常'}"></span>
+                </div>
+            </div>
+
+            <!-- Info Grid -->
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="info-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M13.5 6a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5v-8a.5.5 0 0 1 .5-.5h9zm-9-1a.5.5 0 0 0-.5.5v8a1.5 1.5 0 0 0 1.5 1.5h9a1.5 1.5 0 0 0 1.5-1.5v-8a.5.5 0 0 0-.5-.5h-9z"/>
+                            <path d="M2 3a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2H2V3zm2-1a1 1 0 0 0-1 1v2h10V3a1 1 0 0 0-1-1H4z"/>
+                        </svg>
+                    </div>
+                    <div class="info-content">
+                        <div class="info-title">学号</div>
+                        <div class="info-value">[[${student.studentId}]]</div>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <div class="info-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M12 14a4 4 0 1 1-8 0 4 4 0 0 1 8 0zm-2-4a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-1-9a1 1 0 0 0-1 1v4a1 1 0 1 0 2 0V2a1 1 0 0 0-1-1z"/>
+                        </svg>
+                    </div>
+                    <div class="info-content">
+                        <div class="info-title">姓名</div>
+                        <div class="info-value">[[${student.studentName}]]</div>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <div class="info-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M14.763.075A.5.5 0 0 1 15 .5v15a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5V14h-1v1.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5V2h1V.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 .263.075zM3 14h4v-1H3v1zm9-9h-4v1h4V5zm-9 7h4v-1H3v1z"/>
+                        </svg>
+                    </div>
+                    <div class="info-content">
+                        <div class="info-title">院系</div>
+                        <div class="info-value">[[${student.department}]]</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feature Cards -->
+            <div class="dashboard-card">
+                <h3 style="color: var(--text-primary); font-weight: 600; margin-bottom: 20px;">功能菜单</h3>
+                <div class="feature-cards">
+                    <a th:href="@{/student/profile(studentId=${student.studentId})}" class="feature-card">
+                        <div class="feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 16 16">
+                                <path d="M12 14a4 4 0 1 1-8 0 4 4 0 0 1 8 0zm-2-4a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-1-9a1 1 0 0 0-1 1v4a1 1 0 1 0 2 0V2a1 1 0 0 0-1-1z"/>
+                            </svg>
+                        </div>
+                        <div class="feature-title">个人中心</div>
+                        <div class="feature-desc">查看个人信息</div>
+                    </a>
+                    <a th:href="@{/student/recharge/apply(studentId=${student.studentId})}" class="feature-card">
+                        <div class="feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 16 16">
+                                <path d="M10.5 6a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM5.5 9a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0z"/>
+                                <path d="M0 1h16v1H0zM0 5h16v1H0zM0 9h16v1H0zM0 13h16v1H0z"/>
+                            </svg>
+                        </div>
+                        <div class="feature-title">余额充值</div>
+                        <div class="feature-desc">提交充值申请</div>
+                    </a>
+                    <a th:href="@{/student/consumption/records(studentId=${student.studentId})}" class="feature-card">
+                        <div class="feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 16 16">
+                                <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
+                                <path d="M2 5.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0 3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0 3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"/>
+                            </svg>
+                        </div>
+                        <div class="feature-title">消费记录</div>
+                        <div class="feature-desc">查看消费明细</div>
+                    </a>
+                    <a th:href="@{/student/password/change(studentId=${student.studentId})}" class="feature-card">
+                        <div class="feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 16 16">
+                                <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/>
+                            </svg>
+                        </div>
+                        <div class="feature-title">修改密码</div>
+                        <div class="feature-desc">安全设置</div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Lost/Unlost Button -->
+            <div class="dashboard-card">
+                <h3 style="color: var(--text-primary); font-weight: 600; margin-bottom: 20px;">挂失管理</h3>
+                <form th:action="@{/student/lost}" method="post" th:if="${student.isLost == 0}" class="d-inline">
+                    <input type="hidden" name="studentId" th:value="${student.studentId}">
+                    <button type="submit" class="btn-danger-custom">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M7.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.018 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                        </svg>
+                        挂失饭卡
+                    </button>
+                </form>
+                <form th:action="@{/student/unlost}" method="post" th:if="${student.isLost == 1}" class="d-inline">
+                    <input type="hidden" name="studentId" th:value="${student.studentId}">
+                    <button type="submit" class="btn-success-custom">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M5 3a4 4 0 0 0-4 4v6a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V7a4 4 0 0 0-4-4H5zm3 1a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm0 1a2 2 0 1 1 0 4 2 2 0 0 1 0-4z"/>
+                            <path d="M10 10.793V13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1v-2.207l5-3.572L10 10.793z"/>
+                        </svg>
+                        解除挂失
+                    </button>
+                </form>
+                <p style="color: var(--text-secondary); font-size: 14px; margin-top: 16px; display: flex; align-items: center; gap: 8px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.923c-.278.924-1.015 1.396-1.907 1.212l-.976-.266c-.951-.255-1.195-.948-.698-1.501l1.397-.937a.625.625 0 0 0-.086-1.017l-2.986 2.28a.625.625 0 0 1-.945-.011l-.948-.948a.625.625 0 0 1 .011-.945l2.28-2.986a.625.625 0 0 0 1.017-.086l.937 1.397c.553.497 1.246.352 1.501-.698l.266-.976c.184-.892-.287-1.63-.979-1.907l-.923-.088c-.246-.199-.43-.492-.43-.686 0-.275.193-.374.533-.304l4.705-1c.34.07.533-.029.533-.304 0-.194-.07-.487-.246-.686l-.923.088c-.892-.184-1.396-1.015-1.212-1.907l.266-.976c.255-.951.948-1.195 1.501-.698l1.397 1.397a.625.625 0 0 0 1.017.086l2.986-2.28a.625.625 0 0 1 .945.011l.948.948a.625.625 0 0 1-.011.945l-2.28 2.986a.625.625 0 0 0-.086 1.017l1.397-.937c.497.553.352 1.246-.698 1.501l-.976.266c-.892.184-1.63-.287-1.907-.979l-.088-.923c-.199-.246-.492-.43-.686-.43z"/>
+                    </svg>
+                    挂失后将无法进行消费，如需恢复请联系管理员或自行解除挂失
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

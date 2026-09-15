@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学生登录 - 餐费管理系统</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #165DFF;
+            --primary-dark: #0E42D2;
+            --success: #00B42A;
+            --danger: #F53F3F;
+            --info: #86909C;
+            --bg-page: #F5F7FA;
+            --bg-card: #FFFFFF;
+            --border: #E5E6EB;
+            --text-primary: #1D2129;
+            --text-secondary: #4E5969;
+        }
+        
+        body {
+            background-color: var(--bg-page);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+        
+        .login-container {
+            width: 100%;
+            max-width: 420px;
+            padding: 20px;
+        }
+        
+        .login-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+            border: none;
+        }
+        
+        .login-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        
+        .login-icon-box {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary) 0%, #4080FF 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            box-shadow: 0 4px 16px rgba(22, 93, 255, 0.3);
+        }
+        
+        .login-title {
+            color: var(--primary);
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .login-subtitle {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        
+        .form-label {
+            color: var(--text-primary);
+            font-weight: 500;
+            margin-bottom: 8px;
+            display: block;
+        }
+        
+        .form-control {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(22, 93, 255, 0.15);
+            outline: none;
+        }
+        
+        .btn-primary-custom {
+            background: var(--primary);
+            border: none;
+            border-radius: 8px;
+            padding: 14px;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            width: 100%;
+            color: white;
+        }
+        
+        .btn-primary-custom:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(22, 93, 255, 0.3);
+        }
+        
+        .login-footer {
+            text-align: center;
+            margin-top: 24px;
+        }
+        
+        .link-text {
+            color: var(--info);
+            font-size: 14px;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .link-text:hover {
+            color: var(--primary);
+        }
+        
+        .error-message {
+            background: rgba(245, 63, 63, 0.1);
+            border: 1px solid rgba(245, 63, 63, 0.2);
+            border-radius: 8px;
+            padding: 12px;
+            color: var(--danger);
+            font-size: 14px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-secondary);
+            font-size: 14px;
+            text-decoration: none;
+            margin-bottom: 20px;
+            transition: color 0.3s ease;
+        }
+        
+        .back-link:hover {
+            color: var(--primary);
+        }
+        
+        .input-wrapper {
+            position: relative;
+        }
+        
+        .input-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--info);
+            font-size: 16px;
+        }
+        
+        .input-with-icon {
+            padding-left: 40px !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <a href="/" class="back-link">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+            </svg>
+            返回首页
+        </a>
+        
+        <div class="login-card">
+            <div class="login-header">
+                <div class="login-icon-box">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="white" viewBox="0 0 24 24">
+                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                    </svg>
+                </div>
+                <h1 class="login-title">学生登录</h1>
+                <p class="login-subtitle">请输入学号和密码登录系统</p>
+            </div>
+            
+            <div th:if="${error}" class="error-message">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                    <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z"/>
+                </svg>
+                <span th:text="${error}"></span>
+            </div>
+            
+            <form action="/student/login" method="post" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+                <input type="hidden" name="prevent-autofill" id="prevent-autofill" value="" style="display: none;">
+                <div style="display: none;">
+                    <input type="text" name="fake-username" autocomplete="username">
+                    <input type="password" name="fake-password" autocomplete="current-password">
+                </div>
+                <div class="mb-4">
+                    <label class="form-label">学号</label>
+                    <div class="input-wrapper">
+                        <svg class="input-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M13.5 6a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5v-8a.5.5 0 0 1 .5-.5h9zm-9-1a.5.5 0 0 0-.5.5v8a1.5 1.5 0 0 0 1.5 1.5h9a1.5 1.5 0 0 0 1.5-1.5v-8a.5.5 0 0 0-.5-.5h-9z"/>
+                            <path d="M2 3a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2H2V3zm2-1a1 1 0 0 0-1 1v2h10V3a1 1 0 0 0-1-1H4z"/>
+                        </svg>
+                        <input type="text" name="studentId" id="studentId" class="form-control input-with-icon" placeholder="请输入学号" required autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="form-label">密码</label>
+                    <div class="input-wrapper">
+                        <svg class="input-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/>
+                        </svg>
+                        <input type="password" name="password" id="password" class="form-control input-with-icon" placeholder="请输入密码" required autocomplete="off">
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn-primary-custom">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="margin-right: 8px;">
+                        <path fill-rule="evenodd" d="M10.604 1.81a.5.5 0 0 0-.58.02L3.89 9.49a.5.5 0 0 0-.18.51v2.17a.5.5 0 0 0 .58.49l10.17-8.14a.5.5 0 0 0 .02-.58V1.81z"/>
+                        <path d="M4.604 1.81a1.5 1.5 0 0 1 1.74-1.08l9.654 7.72a1.5 1.5 0 0 1 0 2.16l-9.654 7.72a1.5 1.5 0 0 1-1.74-1.08V1.81z"/>
+                    </svg>
+                    登录
+                </button>
+            </form>
+            
+            <div class="login-footer">
+                <span class="link-text">还没有账号？</span>
+                <a href="/student/register" class="link-text">立即注册</a>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

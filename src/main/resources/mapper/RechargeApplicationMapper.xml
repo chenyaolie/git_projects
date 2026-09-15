@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hgnu.diningexpensemanagementsystem.mapper.RechargeApplicationMapper">
+    <insert id="insert">
+        INSERT INTO RechargeApplicationDEMS(StudentId, Amount)
+        VALUES(#{studentId}, #{amount})
+    </insert>
+    
+    <select id="selectByStudentId" resultType="RechargeApplicationDEMS">
+        SELECT ra.*, s.StudentName, a.AdminName 
+        FROM RechargeApplicationDEMS ra
+        LEFT JOIN StudentDEMS s ON ra.StudentId = s.StudentId
+        LEFT JOIN AdminDEMS a ON ra.AdminId = a.AdminId
+        WHERE ra.StudentId = #{studentId}
+        ORDER BY ra.ApplyTime DESC
+    </select>
+    
+    <select id="selectByStatus" resultType="RechargeApplicationDEMS">
+        SELECT ra.*, s.StudentName, a.AdminName 
+        FROM RechargeApplicationDEMS ra
+        LEFT JOIN StudentDEMS s ON ra.StudentId = s.StudentId
+        LEFT JOIN AdminDEMS a ON ra.AdminId = a.AdminId
+        WHERE ra.Status = #{status}
+        ORDER BY ra.ApplyTime DESC
+    </select>
+    
+    <select id="selectByApplicationId" resultType="RechargeApplicationDEMS">
+        SELECT ra.*, s.StudentName 
+        FROM RechargeApplicationDEMS ra
+        LEFT JOIN StudentDEMS s ON ra.StudentId = s.StudentId
+        WHERE ra.ApplicationId = #{applicationId}
+    </select>
+    
+    <update id="updateStatus">
+        UPDATE RechargeApplicationDEMS 
+        SET Status=#{status}, AdminId=#{adminId}, AuditTime=NOW()
+        WHERE ApplicationId=#{applicationId}
+    </update>
+    
+    <select id="selectAll" resultType="RechargeApplicationDEMS">
+        SELECT ra.*, s.StudentName, a.AdminName 
+        FROM RechargeApplicationDEMS ra
+        LEFT JOIN StudentDEMS s ON ra.StudentId = s.StudentId
+        LEFT JOIN AdminDEMS a ON ra.AdminId = a.AdminId
+        ORDER BY ra.ApplyTime DESC
+    </select>
+</mapper>
