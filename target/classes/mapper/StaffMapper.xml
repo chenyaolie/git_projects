@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hgnu.diningexpensemanagementsystem.mapper.StaffMapper">
+    <select id="selectByStaffId" resultType="StaffDEMS">
+        SELECT * FROM StaffDEMS WHERE StaffId = #{staffId}
+    </select>
+    
+    <insert id="insert">
+        INSERT INTO StaffDEMS(StaffId, StaffName, Password)
+        VALUES(#{staffId}, #{staffName}, #{password})
+    </insert>
+    
+    <update id="update">
+        UPDATE StaffDEMS SET StaffName=#{staffName} WHERE StaffId=#{staffId}
+    </update>
+    
+    <delete id="delete">
+        DELETE FROM StaffDEMS WHERE StaffId=#{staffId}
+    </delete>
+    
+    <select id="selectAll" resultType="StaffDEMS">
+        SELECT * FROM StaffDEMS ORDER BY CreateTime DESC
+    </select>
+    
+    <update id="updatePassword">
+        UPDATE StaffDEMS SET Password=#{password} WHERE StaffId=#{staffId}
+    </update>
+</mapper>

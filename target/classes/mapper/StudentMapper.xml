@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hgnu.diningexpensemanagementsystem.mapper.StudentMapper">
+    <select id="selectByStudentId" resultType="StudentDEMS">
+        SELECT * FROM StudentDEMS WHERE StudentId = #{studentId}
+    </select>
+    
+    <insert id="insert">
+        INSERT INTO StudentDEMS(StudentId, StudentName, Department, Password)
+        VALUES(#{studentId}, #{studentName}, #{department}, #{password})
+    </insert>
+    
+    <update id="update">
+        UPDATE StudentDEMS SET StudentName=#{studentName}, Department=#{department}
+        WHERE StudentId=#{studentId}
+    </update>
+    
+    <delete id="delete">
+        DELETE FROM StudentDEMS WHERE StudentId=#{studentId}
+    </delete>
+    
+    <select id="selectAll" resultType="StudentDEMS">
+        SELECT * FROM StudentDEMS ORDER BY CreateTime DESC
+    </select>
+    
+    <update id="updateBalance">
+        UPDATE StudentDEMS SET Balance = Balance + #{amount} WHERE StudentId=#{studentId}
+    </update>
+    
+    <update id="updatePassword">
+        UPDATE StudentDEMS SET Password=#{password} WHERE StudentId=#{studentId}
+    </update>
+    
+    <update id="updateIsLost">
+        UPDATE StudentDEMS SET IsLost=#{isLost} WHERE StudentId=#{studentId}
+    </update>
+</mapper>
